@@ -1,0 +1,71 @@
+﻿<script src="~/lib/signalr/signalr.min.js"></script>
+
+<div class="row">
+    <div class="col-12">
+        <div id="consoleWrap" style="max-height:500px;overflow:auto;">
+            <pre id="console"></pre>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <tr>
+                <td>@Html.TextBox("cmdInput", "", new { @class = "form-control" })</td>
+                <td><input type="button" id="sendButton" value="메시지 전송" class="btn btn-sm btn-primary" /></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    var _connection = new signalR.HubConnectionBuilder().withUrl("/hubs/command").build();
+    var _tryConnect = 0;
+
+    _connection.on("ReceiveMessage", function (message) {
+        $("#console").append(message);
+        $("#consoleWrap").scrollTop($("#consoleWrap")[0].scrollHeight);
+    });
+
+    _connection.onclose(function () {
+        console.log('connecition closed');
+        if (_tryConnect < 5) {
+            _tryConnect++;
+
+            setTimeout(function () {
+                console.log('connecition reconnect try');
+
+                _connection.start().catch(function (err) {
+                    return console.error(err.toString());
+                });
+            }, 5000);
+        }
+    });
+
+    _connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    $("#cmdInput").keydown(function (evt) {
+        if (evt.keyCode === 13) {
+            $("#sendButton").trigger("click");
+        }
+    });
+
+    $("#sendButton").on("click", function (event) {
+        var cmd = $("#cmdInput").val();
+        $("#cmdInput").val("");
+
+        _connection.invoke("SendCommand", cmd).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        event.preventDefault();
+    });
+
+</script>
