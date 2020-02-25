@@ -1,0 +1,91 @@
+﻿@page "/cmd"
+
+@using System.Text;
+@using System.IO;
+@using BluePope.BlazorWebShell.Lib;
+
+<div class="row">
+    <div class="col-12">
+        <div id="consoleWrap" style="max-height:500px;overflow:auto;">
+            <pre id="console">@cmdOutput</pre>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <tr>
+                <td><input type="text" class="form-control" @bind="cmd" @onkeydown="cmd_KeyDown" /></td>
+                <td><button @onclick="SendCommand" type="button" class="btn btn-sm btn-primary">메시지 전송</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    static StringBuilder cmdOutput = new StringBuilder();
+    static FixedProcess cmdProcess;
+    static StreamWriter cmdStreamWriter;
+
+    string cmd = "";
+
+    protected override void OnInitialized()
+    {
+        if (cmdProcess == null)
+        {
+            cmdProcess = new FixedProcess();
+            cmdProcess.StartInfo.FileName = "cmd";
+            cmdProcess.StartInfo.UseShellExecute = false;
+            cmdProcess.StartInfo.CreateNoWindow = true;
+            cmdProcess.StartInfo.RedirectStandardOutput = true;
+            cmdProcess.StartInfo.RedirectStandardInput = true;
+            cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived;
+            //cmdProcess.EnableRaisingEvents = true;
+            //cmdProcess.Exited += CmdProcess_Exited;
+
+            cmdProcess.Start();
+
+            cmdStreamWriter = cmdProcess.StandardInput;
+            cmdProcess.BeginOutputReadLine();
+        }
+
+        //WebUtility.HtmlEncode(cmdOutput.ToString())
+
+        base.OnInitialized();
+    }
+
+    private void CmdProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
+    {
+        if (e.Data != null)
+        {
+            this.InvokeAsync(() =>
+            {
+                cmdOutput.Append(e.Data);
+                StateHasChanged();
+            });
+        }
+    }
+
+    public void SendCommand()
+    {
+        cmdStreamWriter.WriteLine(cmd);
+        cmd = "";
+        StateHasChanged();
+    }
+
+    
+
+    public void cmd_KeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            SendCommand();
+        }
+    }
+}
