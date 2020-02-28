@@ -47,7 +47,9 @@
             cmdProcess.StartInfo.CreateNoWindow = true;
             cmdProcess.StartInfo.RedirectStandardOutput = true;
             cmdProcess.StartInfo.RedirectStandardInput = true;
-            cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived;
+
+            //다중 접속에 대한 이벤트 생각 해봐야지
+            cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived; 
             //cmdProcess.EnableRaisingEvents = true;
             //cmdProcess.Exited += CmdProcess_Exited;
 
@@ -60,6 +62,20 @@
         //WebUtility.HtmlEncode(cmdOutput.ToString())
 
         base.OnInitialized();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                await js.InvokeVoidAsync("ScrollDown");
+            });
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     private void CmdProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -83,7 +99,7 @@
         StateHasChanged();
     }
 
-    
+
     /// <summary>
     /// keydown keypress 시 cmd 값이 변경되지 않은 상태로 나옴, keyup 만 정상적으로 가져옴
     /// </summary>
