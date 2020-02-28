@@ -20,13 +20,12 @@
     <div class="col-12">
         <table class="table">
             <tr>
-                <td><input type="text" class="form-control" @bind="cmd" @onkeydown="cmd_KeyDown" /></td>
+                <td><input type="text" class="form-control" @bind="cmd" @onkeyup="cmd_KeyUp" /></td>
                 <td><button @onclick="SendCommand" type="button" class="btn btn-sm btn-primary">메시지 전송</button></td>
             </tr>
         </table>
     </div>
 </div>
-
 
 @code {
     static StringBuilder cmdOutput = new StringBuilder();
@@ -34,6 +33,9 @@
     static StreamWriter cmdStreamWriter;
 
     string cmd = "";
+
+    [Inject]
+    public IJSRuntime js { get; set; }
 
     protected override void OnInitialized()
     {
@@ -64,11 +66,13 @@
     {
         if (e.Data != null)
         {
-            this.InvokeAsync(() =>
+            this.InvokeAsync(async () =>
             {
                 cmdOutput.Append(e.Data);
                 StateHasChanged();
-            });
+
+                await js.InvokeVoidAsync("ScrollDown");
+            }).GetAwaiter().GetResult();
         }
     }
 
@@ -80,8 +84,11 @@
     }
 
     
-
-    public void cmd_KeyDown(KeyboardEventArgs e)
+    /// <summary>
+    /// keydown keypress 시 cmd 값이 변경되지 않은 상태로 나옴, keyup 만 정상적으로 가져옴
+    /// </summary>
+    /// <param name="e"></param>
+    public void cmd_KeyUp(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
