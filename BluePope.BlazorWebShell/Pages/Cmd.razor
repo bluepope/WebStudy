@@ -48,8 +48,6 @@
             cmdProcess.StartInfo.RedirectStandardOutput = true;
             cmdProcess.StartInfo.RedirectStandardInput = true;
 
-            //다중 접속에 대한 이벤트 생각 해봐야지
-            cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived; 
             //cmdProcess.EnableRaisingEvents = true;
             //cmdProcess.Exited += CmdProcess_Exited;
 
@@ -59,23 +57,23 @@
             cmdProcess.BeginOutputReadLine();
         }
 
+        //다중 접속에 대한 이벤트 생각 해봐야지
+        cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived; 
+
         //WebUtility.HtmlEncode(cmdOutput.ToString())
 
         base.OnInitialized();
     }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Task.Run(async () =>
-            {
-                await Task.Delay(1000);
-                await js.InvokeVoidAsync("ScrollDown");
-            });
+            await Task.Delay(1000);
+            await js.InvokeVoidAsync("ScrollDown");
         }
 
-        return base.OnAfterRenderAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private void CmdProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
