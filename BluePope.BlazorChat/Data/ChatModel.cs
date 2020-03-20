@@ -21,12 +21,20 @@ namespace BluePope.BlazorChat.Data
         
         public int UserSeq { get; set; }
         public string UserName { get; set; }
-        public DateTime ChatTime { get; set; }
-
+        public DateTime ChatTimeUTC { get; set; }
+        public DateTime ChatTimeLocal
+        {
+            get
+            {
+                //Korea Standard Time 이건 윈도우
+                //Asia/Seoul" Linux
+                return TimeZoneInfo.ConvertTimeFromUtc(ChatTimeUTC, TimeZoneConverter.TZConvert.GetTimeZoneInfo("Asia/Seoul"));
+            }
+        }
         public ChatTypeEnum ChatType { get; set; }
         public ChatModel()
         {
-            ChatTime = DateTime.UtcNow;
+            ChatTimeUTC = DateTime.UtcNow;
         }
     }
 }

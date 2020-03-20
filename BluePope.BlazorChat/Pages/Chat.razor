@@ -1,6 +1,5 @@
 ﻿@page "/chat"
 @using BluePope.BlazorChat.Data;
-@using System.Globalization;
 @implements IDisposable
 @inject ChatService chatService
 <h1>Chat</h1>
@@ -22,7 +21,7 @@
                 }
                 else
                 {
-                    <div><span class="badge badge-primary">@item.UserName (<text>@TimeZoneInfo.ConvertTimeFromUtc(item.ChatTime, TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time")).ToString("HH:mm")</text>)</span> @item.Chat</div>
+                    <div><span class="badge badge-primary">@item.UserName (<text>@item.ChatTimeLocal.ToString("HH:mm")</text>)</span> @item.Chat</div>
                 }
                     }
         </div>
