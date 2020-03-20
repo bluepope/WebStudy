@@ -1,56 +1,57 @@
 ﻿@page "/chat"
 @using BluePope.BlazorChat.Data;
+@using System.Globalization;
 @implements IDisposable
 @inject ChatService chatService
 <h1>Chat</h1>
 
 @if (isLogin)
 {
-    <div class="row">
-        <div class="col-12">
-            <div id="consoleWrap" style="max-height:500px;overflow:auto;">
-                @foreach (var item in chatService.ChatRoom)
+<div class="row">
+    <div class="col-12">
+        <div id="consoleWrap" style="max-height:500px;overflow:auto;">
+            @foreach (var item in chatService.ChatRoom)
+            {
+                @if (item.ChatType == ChatModel.ChatTypeEnum.In)
                 {
-                    @if (item.ChatType == ChatModel.ChatTypeEnum.In)
-                    {
-                        <div class="alert alert-info">@item.Chat</div>
-                    }
-                    else if (item.ChatType == ChatModel.ChatTypeEnum.Out)
-                    {
-                        <div class="alert alert-danger">@item.Chat</div>
-                    }
-                    else
-                    {
-                        <div><span class="badge badge-primary">@item.UserName (@item.ChatTime.ToString("HH:mm"))</span> @item.Chat</div>
-                    }
+                    <div class="alert alert-info">@item.Chat</div>
                 }
-            </div>
+                else if (item.ChatType == ChatModel.ChatTypeEnum.Out)
+                {
+                    <div class="alert alert-danger">@item.Chat</div>
+                }
+                else
+                {
+                    <div><span class="badge badge-primary">@item.UserName (<text>@TimeZoneInfo.ConvertTimeFromUtc(item.ChatTime, TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time")).ToString("HH:mm")</text>)</span> @item.Chat</div>
+                }
+                    }
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <table class="table">
-                <tr>
-                    <td><input type="text" class="form-control" @bind="sendText" @onkeyup="sendText_KeyUp" /></td>
-                    <td><button @onclick="Send" type="button" class="btn btn-sm btn-primary">메시지 전송</button></td>
-                </tr>
-            </table>
-        </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table">
+            <tr>
+                <td><input type="text" class="form-control" @bind="sendText" @onkeyup="sendText_KeyUp" /></td>
+                <td><button @onclick="Send" type="button" class="btn btn-sm btn-primary">메시지 전송</button></td>
+            </tr>
+        </table>
     </div>
+</div>
 }
 else
 {
-    <div>
-        <span>이름: <input @bind="userName" @onkeyup="userName_KeyUp"  type="text" class="form-control" style="width:150px" /></span>
-        <span><button @onclick="Login" type="button" class="btn btn-sm btn-primary">접속</button></span>
-    </div>
+<div>
+    <span>이름: <input @bind="userName" @onkeyup="userName_KeyUp" type="text" class="form-control" style="width:150px" /></span>
+    <span><button @onclick="Login" type="button" class="btn btn-sm btn-primary">접속</button></span>
+</div>
 
-    @if (string.IsNullOrWhiteSpace(loginErrorText) == false)
-    {
-        <div class="alert alert-danger">
-            @loginErrorText
-        </div>
-    }
+@if (string.IsNullOrWhiteSpace(loginErrorText) == false)
+{
+    <div class="alert alert-danger">
+        @loginErrorText
+    </div>
+}
 }
 
 @code {

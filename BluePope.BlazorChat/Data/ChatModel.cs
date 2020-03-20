@@ -26,7 +26,7 @@ namespace BluePope.BlazorChat.Data
         public ChatTypeEnum ChatType { get; set; }
         public ChatModel()
         {
-            ChatTime = DateTime.Now;
+            ChatTime = DateTime.UtcNow;
         }
     }
 }
