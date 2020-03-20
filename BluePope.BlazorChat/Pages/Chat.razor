@@ -1,0 +1,137 @@
+﻿@page "/chat"
+@using BluePope.BlazorChat.Data;
+@implements IDisposable
+@inject ChatService chatService
+<h1>Chat</h1>
+
+@if (isLogin)
+{
+    <div class="row">
+        <div class="col-12">
+            <div id="consoleWrap" style="max-height:500px;overflow:auto;">
+                @foreach (var item in chatService.ChatRoom)
+                {
+                    @if (item.ChatType == ChatModel.ChatTypeEnum.In)
+                    {
+                        <div class="alert alert-info">@item.Chat</div>
+                    }
+                    else if (item.ChatType == ChatModel.ChatTypeEnum.Out)
+                    {
+                        <div class="alert alert-danger">@item.Chat</div>
+                    }
+                    else
+                    {
+                        <div><span class="badge badge-primary">@item.UserName (@item.ChatTime.ToString("HH:mm"))</span> @item.Chat</div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <tr>
+                    <td><input type="text" class="form-control" @bind="sendText" @onkeyup="sendText_KeyUp" /></td>
+                    <td><button @onclick="Send" type="button" class="btn btn-sm btn-primary">메시지 전송</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div>
+        <span>이름: <input @bind="userName" @onkeyup="userName_KeyUp"  type="text" class="form-control" style="width:150px" /></span>
+        <span><button @onclick="Login" type="button" class="btn btn-sm btn-primary">접속</button></span>
+    </div>
+
+    @if (string.IsNullOrWhiteSpace(loginErrorText) == false)
+    {
+        <div class="alert alert-danger">
+            @loginErrorText
+        </div>
+    }
+}
+
+@code {
+    [Inject]
+    public IJSRuntime js { get; set; }
+
+    bool isLogin = false;
+    string loginErrorText = null;
+
+    string sendText = null;
+    string userName = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            chatService.OnChatUpdate += OnChatUpdated;
+        }
+
+        await js.InvokeVoidAsync("ScrollDown");
+    }
+
+    void OnChatUpdated(object sender, EventArgs e)
+    {
+        if (isLogin)
+        {
+            this.InvokeAsync(() => StateHasChanged()).GetAwaiter().GetResult();
+        }
+    }
+
+    void Send()
+    {
+        if (string.IsNullOrWhiteSpace(sendText) == false)
+        {
+            chatService.AppendChat(new ChatModel() { UserName = userName, Chat = sendText });
+            sendText = null;
+        }
+    }
+
+    /// <summary>
+    /// keydown keypress 시 cmd 값이 변경되지 않은 상태로 나옴, keyup 만 정상적으로 가져옴
+    /// </summary>
+    /// <param name="e"></param>
+    void sendText_KeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            Send();
+        }
+    }
+
+    void userName_KeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            Login();
+        }
+    }
+
+    public void Dispose()
+    {
+        chatService.OnChatUpdate -= OnChatUpdated;
+
+        if (isLogin)
+        {
+            chatService.AppendChat(new ChatModel() { UserName = "System", Chat = $"{userName}님이 퇴장하셨습니다", ChatType = ChatModel.ChatTypeEnum.Out });
+        }
+    }
+
+    void Login()
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            loginErrorText = "이름을 정확히 입력해주세요";
+        }
+        else
+        {
+            isLogin = true;
+            chatService.AppendChat(new ChatModel() { UserName = "System", Chat = $"{userName}님이 입장하셨습니다", ChatType = ChatModel.ChatTypeEnum.In });
+        }
+    }
+}
