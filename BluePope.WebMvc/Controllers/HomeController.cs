@@ -50,10 +50,31 @@ namespace BluePope.WebMvc.Controllers
             return Json(DataModel.GetList(search));
         }
 
+        //case 1
+        /*
         [Route("/SampleData")]
         [HttpPost]
-        public IActionResult SaveSampleData(List<DataModel> input)
+        [Consumes("application/json")]
+        public IActionResult SaveSampleDataApi([FromBody]List<DataModel> input)
         {
+            return SaveSampleData(input);
+        }
+        */
+
+        /// <summary>
+        /// BypassFormDataInputFormatter 을 이용하여 먼저 formdata 확인 후 없으면 body에서 받음
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="apiInput"></param>
+        /// <returns></returns>
+        [Route("/SampleData")]
+        [HttpPost]
+        //[Consumes("application/x-www-form-urlencoded")]
+        public IActionResult SaveSampleData(List<DataModel> input, [FromBody]List<DataModel> apiInput)
+        {
+            if (apiInput != null)
+                input = apiInput;
+
             if (ModelState.IsValid == false)
             {
                 return BadRequest(new { msg = "잘못된 요청입니다" });
@@ -83,7 +104,7 @@ namespace BluePope.WebMvc.Controllers
 
                         tran.Commit();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         tran.Rollback();
                         return BadRequest(new { msg = ex.Message });

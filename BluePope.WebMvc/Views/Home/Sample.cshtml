@@ -69,7 +69,13 @@
                         $this.data = data;
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert(xhr.responseBody)
+                        if (xhr.status == 400) {
+                            var data = JSON.parse(xhr.responseText);
+                            alert(data.msg);
+                        }
+                        else {
+                            alert(xhr.responseText)
+                        }
                     }
                 });
             },
@@ -87,7 +93,13 @@
                         $this.Load();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert(xhr.responseBody)
+                        if (xhr.status == 400) {
+                            var data = JSON.parse(xhr.responseText);
+                            alert(data.msg);
+                        }
+                        else {
+                            alert(xhr.responseText)
+                        }
                     }
                 });
             }
