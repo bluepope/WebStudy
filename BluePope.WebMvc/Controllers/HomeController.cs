@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BluePope.WebMvc.Models;
+using System.Data.SqlClient;
 
 namespace BluePope.WebMvc.Controllers
 {
@@ -33,5 +34,65 @@ namespace BluePope.WebMvc.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        #region Dapper 적용 예제
+        public IActionResult Sample()
+        {
+            return View();
+        }
+
+        [Route("/SampleData")]
+        [HttpGet]
+        public JsonResult GetSampleData(string search)
+        {
+            //core가 아닌 asp.net mvc 에서는 , 뒤에 JsonRequestBehavior.AllowGet 를 추가해줘야합니다.
+            return Json(DataModel.GetList(search));
+        }
+
+        [Route("/SampleData")]
+        [HttpPost]
+        public IActionResult SaveSampleData(List<DataModel> input)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(new { msg = "잘못된 요청입니다" });
+            }
+
+            using (var conn = new SqlConnection("connectionstring"))
+            {
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var item in input)
+                        {
+                            switch (item.ItemState)
+                            {
+                                case ModelBase.ItemStateEnum.Deleted:
+                                    item.Delete(conn);
+                                    break;
+                                case ModelBase.ItemStateEnum.Added:
+                                    item.Insert(conn);
+                                    break;
+                                case ModelBase.ItemStateEnum.Modified:
+                                    item.Update(conn);
+                                    break;
+                            }
+                        }
+
+                        tran.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        tran.Rollback();
+                        return BadRequest(new { msg = ex.Message });
+                    }
+                }
+            }
+
+            return Ok();
+        }
+        #endregion
     }
 }
