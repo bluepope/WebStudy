@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,19 +20,33 @@ namespace BluePope.SignalRClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
-    /// BluePope.WebShell 을 먼저 실행해야 테스트 가능함
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ChatWindow : Window
     {
         HubConnection _connection;
-        public MainWindow()
+        public ChatWindow()
         {
             InitializeComponent();
 
-            console.Text = string.Empty;
 
+            var client = new RestClient();
+            client.BaseUrl = new Uri("https://localhost:5001/home/login");
+
+            var request = new RestRequest();
+            request.AddParameter("id", "안현모");
+            request.AddParameter("pw", "히히히");
+            
+            var response = client.Post(request);
+            
+            chat.Text = string.Empty;
             _connection = new HubConnectionBuilder()
-               .WithUrl("https://localhost:5001/hubs/command")
+               .WithUrl("https://localhost:5001/hubs/chat", options => {
+
+                   foreach(var cookie in response.Cookies)
+                   {
+                       options.Cookies.Add(new Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain));
+                   }
+               })
                .WithAutomaticReconnect(new[] { TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10) })
                .Build();
 
@@ -40,7 +55,7 @@ namespace BluePope.SignalRClient
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    console.Text += $"연결 끊어짐.. 재연결 시도 중...\n";
+                    chat.Text += $"연결 끊어짐.. 재연결 시도 중...\n";
                 });
 
                 return Task.CompletedTask;
@@ -48,16 +63,16 @@ namespace BluePope.SignalRClient
 
             _connection.Closed += (error) =>
             {
-                console.Text += $"연결 끊어짐..\n";
+                chat.Text += $"연결 끊어짐..\n";
                 return Task.CompletedTask;
             };
         
-            _connection.On<string>("ReceiveMessage", (message) =>
+            _connection.On<string, string>("ReceiveMessage", (user, message) =>
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    console.Text += WebUtility.HtmlDecode(message);
-                    consoleViewer.ScrollToEnd();
+                    chat.Text += $"{user}: {message}\n";
+                    chatViewer.ScrollToEnd();
                 });
             });
 
@@ -67,7 +82,7 @@ namespace BluePope.SignalRClient
                 {
                     this.Dispatcher.Invoke(() =>
                     {
-                        console.Text += "연결시도 중\n";
+                        chat.Text += "연결시도 중\n";
                     });
                     await _connection.StartAsync();
                 }
@@ -75,8 +90,8 @@ namespace BluePope.SignalRClient
                 {
                     this.Dispatcher.Invoke(() =>
                     {
-                        console.Text += ex.Message + "\n";
-                        consoleViewer.ScrollToEnd();
+                        chat.Text += ex.Message + "\n";
+                        chatViewer.ScrollToEnd();
                     });
                 }
             });
@@ -86,23 +101,17 @@ namespace BluePope.SignalRClient
         {
             try
             {
-                await _connection.InvokeAsync("SendCommand", cmdInput.Text);
+                await _connection.InvokeAsync("SendMessage", chatInput.Text);
             }
             catch (Exception ex)
             {
                 //error
                 this.Dispatcher.Invoke(() =>
                 {
-                    console.Text += ex.Message + "\n";
-                    consoleViewer.ScrollToEnd();
+                    chat.Text += ex.Message + "\n";
+                    chatViewer.ScrollToEnd();
                 });
             }
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            var x = new ChatWindow();
-            x.Show();
         }
     }
 }

@@ -12,7 +12,8 @@
         </ScrollViewer>
 
         <TextBox x:Name="cmdInput" HorizontalAlignment="Left" Margin="118,390,0,0" Text="TextBox" TextWrapping="Wrap" Width="315" Height="22" VerticalAlignment="Top"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="451,390,0,0" Width="61" Click="Button_Click" Height="22" VerticalAlignment="Top"/>
+        <Button Content="cmd 전송" HorizontalAlignment="Left" Margin="451,390,0,0" Width="61" Click="Button_Click" Height="22" VerticalAlignment="Top"/>
+        <Button Content="Chat 테스트" HorizontalAlignment="Left" Margin="585,417,0,0" Width="77"  Height="22" VerticalAlignment="Top" Click="Button_Click_1"/>
 
     </Grid>
 </Window>
