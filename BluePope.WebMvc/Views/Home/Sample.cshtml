@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Sample";
 }
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <div id="app1">
     <div>
         <span>검색어</span>
@@ -44,6 +45,7 @@
 
     <div class="text-right">
         <button v-on:click="Save" class="btn btn-primary">저장</button>
+        <button v-on:click="AxiosSave" class="btn btn-primary">Axios 저장</button>
     </div>
 </div>
 
@@ -101,6 +103,24 @@
                             alert(xhr.responseText)
                         }
                     }
+                });
+            },
+            AxiosSave: function () {
+                var $this = this;
+
+                axios({
+                    method: 'post',
+                    url: "/SampleData",
+                    data: {
+                        input: $this.data
+                    }
+                })
+                .then(function (response) {
+                    $this.Load();
+                })
+                .catch(function (response) {
+                    //handle error
+                    console.log(response);
                 });
             }
         }

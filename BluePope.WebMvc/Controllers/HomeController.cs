@@ -7,9 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BluePope.WebMvc.Models;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.IO;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace BluePope.WebMvc.Controllers
 {
+
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -70,15 +79,14 @@ namespace BluePope.WebMvc.Controllers
         [Route("/SampleData")]
         [HttpPost]
         //[Consumes("application/x-www-form-urlencoded")]
-        public IActionResult SaveSampleData(List<DataModel> input, [FromBody]List<DataModel> apiInput)
+        public IActionResult SaveSampleData(List<DataModel> input)
         {
-            if (apiInput != null)
-                input = apiInput;
-
             if (ModelState.IsValid == false)
             {
                 return BadRequest(new { msg = "잘못된 요청입니다" });
             }
+
+            return Ok();
 
             using (var conn = new SqlConnection("connectionstring"))
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BluePope.WebMvc.Common;
+using BluePope.WebMvc.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,7 +27,11 @@ namespace BluePope.WebMvc
         {
             services.AddControllersWithViews(options =>
             {
-                options.InputFormatters.Add(new BypassFormDataInputFormatter());
+                //FormBody 와 일반 formdata 혼용을 위한 바이패스
+                //options.InputFormatters.Add(new BypassFormDataInputFormatter());
+
+                //ResourceFilter 를 이용한 FromBody -> Formdata
+                options.Filters.Add(typeof(RequestFromBodyToFormDataFilter));
             });
         }
 
