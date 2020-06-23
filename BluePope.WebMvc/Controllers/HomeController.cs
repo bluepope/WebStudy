@@ -14,11 +14,11 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using BluePope.WebMvc.Filters;
 
 namespace BluePope.WebMvc.Controllers
 {
-
-
+    //[ConvertRequestBodyToFormData] //컨트롤러에 적용도 가능
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -70,15 +70,9 @@ namespace BluePope.WebMvc.Controllers
         }
         */
 
-        /// <summary>
-        /// BypassFormDataInputFormatter 을 이용하여 먼저 formdata 확인 후 없으면 body에서 받음
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="apiInput"></param>
-        /// <returns></returns>
         [Route("/SampleData")]
         [HttpPost]
-        //[Consumes("application/x-www-form-urlencoded")]
+        [ConvertRequestBodyToFormData] //FromBody를 FormData로 변환
         public IActionResult SaveSampleData(List<DataModel> input)
         {
             if (ModelState.IsValid == false)
@@ -86,7 +80,7 @@ namespace BluePope.WebMvc.Controllers
                 return BadRequest(new { msg = "잘못된 요청입니다" });
             }
 
-            return Ok();
+            return Json(input);
 
             using (var conn = new SqlConnection("connectionstring"))
             {

@@ -29,9 +29,9 @@ namespace BluePope.WebMvc
             {
                 //FormBody 와 일반 formdata 혼용을 위한 바이패스
                 //options.InputFormatters.Add(new BypassFormDataInputFormatter());
-
-                //ResourceFilter 를 이용한 FromBody -> Formdata
-                options.Filters.Add(typeof(RequestFromBodyToFormDataFilter));
+                
+                //전역 ResourceFilter 를 이용한 FromBody -> Formdata
+                //options.Filters.Add(typeof(RequestFromBodyToFormDataResourceFilter));
             });
         }
 

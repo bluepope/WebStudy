@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BluePope.WebMvc.Filters
 {
-    public class RequestFromBodyToFormDataFilter : IResourceFilter
+    public class RequestFromBodyToFormDataResourceFilter : IResourceFilter
     {
         public void OnResourceExecuted(ResourceExecutedContext context)
         {

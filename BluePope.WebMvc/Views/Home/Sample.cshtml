@@ -92,7 +92,8 @@
                         input: $this.data
                     },
                     success: function (data, status, xhr) {
-                        $this.Load();
+                        alert(JSON.stringify(data));
+                        //$this.Load();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         if (xhr.status == 400) {
@@ -114,15 +115,17 @@
                     data: {
                         input: $this.data
                     }
-                })
-                .then(function (response) {
-                    $this.Load();
-                })
-                .catch(function (response) {
+                }).then(function (response) {
+                        alert(JSON.stringify(response.data));
+                    //$this.Load();
+                }).catch(function (response) {
                     //handle error
                     console.log(response);
                 });
             }
+        },
+        mounted: function () {
+            this.Load();
         }
     });
 </script>
