@@ -18,7 +18,7 @@ namespace BluePope.WebMvc.Filters
         {
             var request = context.HttpContext.Request;
 
-            var accept = request.GetTypedHeaders().Accept.FirstOrDefault(p => p.MediaType == "application/json");
+            var accept = request.GetTypedHeaders()?.Accept?.FirstOrDefault(p => p.MediaType == "application/json");
 
             if (accept != null && context.HttpContext.Request.HasFormContentType == false)
             {
@@ -30,7 +30,7 @@ namespace BluePope.WebMvc.Filters
                     list.Add(item.Key, item.Value);
                 }
 
-                context.HttpContext.Request.Body = new MemoryStream();
+                await context.HttpContext.Request.Body.DisposeAsync();
                 context.HttpContext.Request.Form = new Microsoft.AspNetCore.Http.FormCollection(list);
             }
         }
