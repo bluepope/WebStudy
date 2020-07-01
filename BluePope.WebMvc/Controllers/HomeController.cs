@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BluePope.WebMvc.Filters;
+using BluePope.WebMvc.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BluePope.WebMvc.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.IO;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
-using System.Text;
-using BluePope.WebMvc.Filters;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BluePope.WebMvc.Controllers
 {
