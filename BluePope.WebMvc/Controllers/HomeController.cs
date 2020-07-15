@@ -19,7 +19,11 @@ namespace BluePope.WebMvc.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(
+            string param1,
+            int param2,
+            DataModel param3, 
+            List<DataModel> param4)
         {
             return View();
         }

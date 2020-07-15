@@ -6,3 +6,47 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<form method="post" action="/home/index">
+    <input name="param1" value="hello" />
+    <input name="param2" value="1" />
+    <input name="param3[Col1]" value="열1" />
+    <input name="param3[Col2]" value="2" />
+
+    <input name="param4[0][Col1]" value="줄1열1" />
+    <input name="param4[0][Col2]" value="12" />
+    <input name="param4[1][Col1]" value="줄2열1" />
+    <input name="param4[1][Col2]" value="22" />
+
+    <button type="submit" class="btn btn-sm btn-primary">전송</button>
+</form>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: "/home/index",
+        dataType: "json",
+        data: {
+            param1: "hello",
+            param2: 1,
+            param3: {
+                Col1: "열1",
+                Col2: 1
+            },
+            param4: [
+                {
+                    Col1: "줄1열1",
+                    Col2: 12
+                },
+                {
+                    Col1: "줄2열2",
+                    Col2: 22
+                }
+            ]
+        },
+        success: function (data, status, xhr) {
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        }
+    });
+</script>
