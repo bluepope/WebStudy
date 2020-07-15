@@ -1,24 +1,15 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BluePope.SignalRClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// BluePope.WebShell 을 먼저 실행해야 테스트 가능함
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -33,6 +24,7 @@ namespace BluePope.SignalRClient
                .WithUrl("https://localhost:5001/hubs/command")
                .WithAutomaticReconnect(new[] { TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10) })
                .Build();
+
 
             _connection.Reconnecting += (error) =>
             {
@@ -49,7 +41,7 @@ namespace BluePope.SignalRClient
                 console.Text += $"연결 끊어짐..\n";
                 return Task.CompletedTask;
             };
-        
+
             _connection.On<string>("ReceiveMessage", (message) =>
             {
                 this.Dispatcher.Invoke(() =>
@@ -95,6 +87,12 @@ namespace BluePope.SignalRClient
                     consoleViewer.ScrollToEnd();
                 });
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var x = new ChatWindow();
+            x.Show();
         }
     }
 }

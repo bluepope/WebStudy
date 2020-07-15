@@ -11,11 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluePope.BlazorWebShell", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluePope.BlazorChat", "BluePope.BlazorChat\BluePope.BlazorChat.csproj", "{247AC4F9-5370-4EA7-A6B6-78DFEFCA1C47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluePope.WebApp", "BluePope.WebApp\BluePope.WebApp.csproj", "{B4193250-CD8A-4EB7-974F-A411799234F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluePope.WebApp", "BluePope.WebApp\BluePope.WebApp.csproj", "{B4193250-CD8A-4EB7-974F-A411799234F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluePope.WebMvc", "BluePope.WebMvc\BluePope.WebMvc.csproj", "{06A319F5-A76A-41C3-BF02-E750FB37A634}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluePope.WebMvc", "BluePope.WebMvc\BluePope.WebMvc.csproj", "{06A319F5-A76A-41C3-BF02-E750FB37A634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluePope.WebApi", "BluePope.WebApi\BluePope.WebApi.csproj", "{F223C75B-4189-41A0-AB2F-9621798438FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BluePope.WebApi", "BluePope.WebApi\BluePope.WebApi.csproj", "{F223C75B-4189-41A0-AB2F-9621798438FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluePope.GrpcService1", "BluePope.GrpcService1\BluePope.GrpcService1.csproj", "{81B71026-4809-4239-B8FF-60A3B2C0745C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluePope.ConsoleApp1", "BluePope.ConsoleApp1\BluePope.ConsoleApp1.csproj", "{9AC265D0-0364-4687-8B8F-86DD2E667D93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{F223C75B-4189-41A0-AB2F-9621798438FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F223C75B-4189-41A0-AB2F-9621798438FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F223C75B-4189-41A0-AB2F-9621798438FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81B71026-4809-4239-B8FF-60A3B2C0745C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81B71026-4809-4239-B8FF-60A3B2C0745C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B71026-4809-4239-B8FF-60A3B2C0745C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81B71026-4809-4239-B8FF-60A3B2C0745C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC265D0-0364-4687-8B8F-86DD2E667D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC265D0-0364-4687-8B8F-86DD2E667D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC265D0-0364-4687-8B8F-86DD2E667D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC265D0-0364-4687-8B8F-86DD2E667D93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

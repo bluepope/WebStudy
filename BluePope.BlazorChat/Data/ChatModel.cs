@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BluePope.BlazorChat.Data
 {
@@ -18,7 +16,7 @@ namespace BluePope.BlazorChat.Data
         public int ChatRoomId { get; set; }
         public int ChatId { get; set; }
         public string Chat { get; set; }
-        
+
         public int UserSeq { get; set; }
         public string UserName { get; set; }
         public DateTime ChatTimeUTC { get; set; }

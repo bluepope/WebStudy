@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BluePope.WebMvc.Filters;
+using BluePope.WebMvc.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BluePope.WebMvc.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BluePope.WebMvc.Controllers
 {
+    //[ConvertRequestBodyToFormData] //컨트롤러에 적용도 가능
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -65,24 +67,17 @@ namespace BluePope.WebMvc.Controllers
         }
         */
 
-        /// <summary>
-        /// BypassFormDataInputFormatter 을 이용하여 먼저 formdata 확인 후 없으면 body에서 받음
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="apiInput"></param>
-        /// <returns></returns>
         [Route("/SampleData")]
         [HttpPost]
-        //[Consumes("application/x-www-form-urlencoded")]
-        public IActionResult SaveSampleData(List<DataModel> input, [FromBody]List<DataModel> apiInput)
+        [ConvertRequestBodyToFormData] //FromBody를 FormData로 변환
+        public IActionResult SaveSampleData(List<DataModel> input)
         {
-            if (apiInput != null)
-                input = apiInput;
-
             if (ModelState.IsValid == false)
             {
                 return BadRequest(new { msg = "잘못된 요청입니다" });
             }
+
+            return Json(input);
 
             using (var conn = new SqlConnection("connectionstring"))
             {

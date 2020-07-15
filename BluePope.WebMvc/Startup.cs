@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BluePope.WebMvc.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
 
 namespace BluePope.WebMvc
 {
@@ -26,7 +22,11 @@ namespace BluePope.WebMvc
         {
             services.AddControllersWithViews(options =>
             {
-                options.InputFormatters.Add(new BypassFormDataInputFormatter());
+                //FormBody 와 일반 formdata 혼용을 위한 바이패스
+                //options.InputFormatters.Add(new BypassFormDataInputFormatter());
+
+                //전역 ResourceFilter 를 이용한 FromBody -> Formdata
+                //options.Filters.Add(typeof(RequestFromBodyToFormDataResourceFilter));
             });
         }
 

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BluePope.WebShell.Hubs;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
 
 namespace BluePope.WebShell
 {
@@ -25,6 +23,18 @@ namespace BluePope.WebShell
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //쿠키인증
+            services.AddAuthentication(options =>
+            {
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(options =>
+            {
+                options.LoginPath = "/Home/Login";
+                //options.EventsType = typeof(CustomCookieAuthenticationEvents);
+            });
 
             //SignalR 추가
             services.AddSignalR();
@@ -48,6 +58,7 @@ namespace BluePope.WebShell
 
             app.UseRouting();
 
+            app.UseAuthentication(); //이게 먼저와야 인증 처리됨
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -57,6 +68,7 @@ namespace BluePope.WebShell
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapHub<CommandHub>("/hubs/command");
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
         }
     }

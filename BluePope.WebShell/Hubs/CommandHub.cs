@@ -1,8 +1,6 @@
 ﻿using BluePope.WebShell.Lib;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -53,10 +51,11 @@ namespace BluePope.WebShell.Hubs
 
         public async Task SendCommand(string cmd)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 cmdStreamWriter.WriteLine(cmd);
             });
-            
+
             //await Clients.All.SendAsync("ReceiveMessage", cmd);
         }
 
@@ -73,7 +72,7 @@ namespace BluePope.WebShell.Hubs
                 var data = e.Data;
 
                 cmdOutput.Append(e.Data);
-                
+
                 Task.WaitAll(_hub.Clients.All.SendAsync("ReceiveMessage", WebUtility.HtmlEncode(e.Data)));
             }
         }

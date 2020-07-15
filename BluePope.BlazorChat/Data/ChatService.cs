@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BluePope.BlazorChat.Data
 {
     public class ChatService
     {
         public List<ChatModel> ChatRoom { get; private set; } = new List<ChatModel>();
-        
+
         public event EventHandler OnChatUpdate;
 
         public bool AppendChat(ChatModel chat)
@@ -18,7 +17,7 @@ namespace BluePope.BlazorChat.Data
             //ChatRoomList[chatRoomSeq].Add(chat);
 
             ChatRoom.Add(chat);
-            
+
             OnChatUpdate?.Invoke(null, EventArgs.Empty);
 
             Console.WriteLine(OnChatUpdate?.GetInvocationList().Length);
