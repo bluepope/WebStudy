@@ -21,34 +21,55 @@
     <button type="submit" class="btn btn-sm btn-primary">전송</button>
 </form>
 
+<button id="btn1" class="btn btn-primary">ajax 테스트</button>
+<button id="btn2" class="btn btn-primary">ajax cors 테스트</button>
+
 <script>
-    $.ajax({
-        type: "GET",
-        url: "/home/index",
-        dataType: "json",
-        data: {
-            param1: "hello",
-            param2: 1,
-            param3: {
-                Col1: "열1",
-                Col2: 1
-            },
-            param4: [
-                {
-                    Col1: "줄1열1",
-                    Col2: 12
+    $("#btn1").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/home/index",
+            dataType: "json",
+            data: {
+                param1: "hello",
+                param2: 1,
+                param3: {
+                    Col1: "열1",
+                    Col2: 1
                 },
-                {
-                    Col1: "줄2열2",
-                    Col2: 22
-                }
-            ]
-        },
-        success: function (data, status, xhr) {
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-        }
+                param4: [
+                    {
+                        Col1: "줄1열1",
+                        Col2: 12
+                    },
+                    {
+                        Col1: "줄2열2",
+                        Col2: 22
+                    }
+                ]
+            },
+            success: function (data, status, xhr) {
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
+
+    $("#btn2").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "https://localhost:44323/weatherforecast",
+            dataType: "json",
+            data: {
+            },
+            success: function (data, status, xhr) {
+                alert(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+    });
+
 </script>
 
 
